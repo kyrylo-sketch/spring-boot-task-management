@@ -2,11 +2,10 @@ package com.karol.tastManagement.controller;
 
 import com.karol.tastManagement.model.Project;
 import com.karol.tastManagement.model.User;
-import com.karol.tastManagement.repository.ProjectRepository;
-import com.karol.tastManagement.repository.UserRepository;
+import com.karol.tastManagement.model.UserPrincipal;
 import com.karol.tastManagement.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,18 +21,20 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    @PostMapping("/")
-    public Project createProject(Project project){
-        return projectService.save(project);
+    @PostMapping
+    public Project createProject(@RequestBody Project project, Authentication authentication){
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        return projectService.save(project, principal.getUser());
     }
 
-    @GetMapping("/")
-    public List<Project> getProjects(User user){
-        return projectService.findAllUsersProjects(user);
+    @GetMapping
+    public List<Project> getProjects(Authentication authentication){
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        return projectService.findAllUsersProjects(principal.getUser());
     }
 
     @GetMapping("/{id}")
-    public Project getProjectById(@RequestParam(name = "id") String id){
+    public Project getProjectById(@PathVariable String id){
         return projectService.findById(id);
     }
 

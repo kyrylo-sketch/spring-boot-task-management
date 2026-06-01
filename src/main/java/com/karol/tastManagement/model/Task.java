@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,8 +19,10 @@ public class Task {
     private Column column;
     private Priority priority;
     private LocalDateTime deadline;
-    private List<Comment> comment;
+    private List<Comment> comment = new ArrayList<>();
     private LocalDateTime createdAt;
+    private String columnId;
+    private String projectId;
 
     public Task() {}
 
@@ -31,6 +34,22 @@ public class Task {
         this.priority = priority;
         this.deadline = deadline;
         this.createdAt = LocalDateTime.now();
+    }
+
+    public String getColumnId() {
+        return columnId;
+    }
+
+    public void setColumnId(String columnId) {
+        this.columnId = columnId;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(String projectId) {
+        this.projectId = projectId;
     }
 
     public void addComment(Comment comment) {

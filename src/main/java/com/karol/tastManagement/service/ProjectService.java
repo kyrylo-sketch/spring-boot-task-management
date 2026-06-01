@@ -7,6 +7,8 @@ import com.karol.tastManagement.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class ProjectService {
@@ -21,14 +23,24 @@ public class ProjectService {
     @Autowired
     private UserRepository userRepository;
 
-    public Project save(Project project){
+    public Project save(Project project, User owner){
+        project.setOwner(owner);
+        project.setCreatedAt(LocalDateTime.now());
+        if (project.getColumns() == null || project.getColumns().isEmpty()) {
+            project.setColumns(List.of(
+                    new com.karol.tastManagement.model.Column("To Do", 0),
+                    new com.karol.tastManagement.model.Column("In Progress", 1),
+                    new com.karol.tastManagement.model.Column("Done", 2)
+            ));
+        }
+        if (project.getTasks() == null) {
+            project.setTasks(new ArrayList<>());
+        }
         return projectRepository.save(project);
     }
 
     public List<Project> findAllUsersProjects(User user){
-        User found = userRepository.findById(user.getId()).orElse(null);
-        if(found != null) return found.getProjects();
-        else return null;
+        return projectRepository.findByOwnerEmail(user.getEmail());
     }
 
     public Project findById(String id){
