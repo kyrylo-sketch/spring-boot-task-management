@@ -13,10 +13,10 @@ public class Comment {
 
     public Comment() {
     }
-    public Comment(String content, User author, LocalDateTime createdAt) {
+    public Comment(String content, User author) {
         this.content = content;
         this.author = author;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDateTime.now();
     }
 
     public String getId() {

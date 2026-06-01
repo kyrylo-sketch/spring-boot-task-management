@@ -23,15 +23,22 @@ public class Task {
 
     public Task() {}
 
-    public Task(Project project, String title, String description, Column column, Priority priority, LocalDateTime deadline, List<Comment> comment, LocalDateTime createdAt) {
+    public Task(Project project, String title, String description, Column column, Priority priority, LocalDateTime deadline) {
         this.project = project;
         this.title = title;
         this.description = description;
         this.column = column;
         this.priority = priority;
         this.deadline = deadline;
-        this.comment = comment;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public void addComment(Comment comment) {
+        this.comment.add(comment);
+    }
+
+    public void removeComment(Comment comment) {
+        this.comment.remove(comment);
     }
 
     public List<Comment> getComment() {

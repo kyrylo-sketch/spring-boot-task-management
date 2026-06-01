@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,17 +16,41 @@ public class Project {
     private String name;
     private User owner;
     private List<Column> columns;
+    private List<Task> tasks = new ArrayList<>();
     private LocalDateTime createdAt;
 
     public Project() {}
 
-    public Project(String name, User owner, List<Column> columns, LocalDateTime createdAt) {
+    public Project(String name, User owner, List<Column> columns) {
         this.name = name;
         this.owner = owner;
         this.columns = columns;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDateTime.now();
     }
 
+    public void addColumn(Column column) {
+        this.columns.add(column);
+    }
+
+    public void removeColumn(Column column) {
+        this.columns.remove(column);
+    }
+
+    public void addTask(Task task) {
+        this.tasks.add(task);
+    }
+
+    public void removeTask(Task task) {
+        this.tasks.remove(task);
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
 
     public String getId() {
         return id;

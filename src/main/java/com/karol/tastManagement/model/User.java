@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.annotation.processing.Generated;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "users")
 public class User {
@@ -16,22 +17,27 @@ public class User {
     private String password;
     private String name;
     private LocalDateTime createdAt;
+    private List<Project> projects;
 
     public User() {}
 
-    public User(String email, String password, String name, LocalDateTime createdAt) {
+    public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public void addProject(Project project) {
+        this.projects.add(project);
+    }
+
+    public void removeProject(Project project) {
+        this.projects.remove(project);
     }
 
     public String getId() {
         return id;
-    }
-
-    public void set_id(String id) {
-        this.id = id;
     }
 
     public String getEmail() {
@@ -64,5 +70,17 @@ public class User {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
