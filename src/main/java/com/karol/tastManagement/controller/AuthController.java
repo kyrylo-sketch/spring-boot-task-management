@@ -3,6 +3,7 @@ package com.karol.tastManagement.controller;
 import com.karol.tastManagement.model.User;
 import com.karol.tastManagement.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,12 +14,12 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public User register(@RequestBody User user){
+    public ResponseEntity<String> register(@RequestBody User user){
         return authService.register(user);
     }
 
     @PostMapping("/login")
-    public User login(@RequestBody User user){
+    public AuthService.Result login(@RequestBody User user){
         return authService.login(user);
     }
 }
