@@ -6,6 +6,8 @@ import com.karol.tastManagement.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CommentService {
 //    POST   /api/tasks/{taskId}/comments     (add)
@@ -24,6 +26,11 @@ public class CommentService {
         task.addComment(comment);
         taskService.update(taskId);
         return comment;
+    }
+
+    public List<Comment> findAllComments(String taskId){
+        Task task = taskService.findById(taskId);
+        return task.getComment();
     }
 
     public void  remove(String commentId){

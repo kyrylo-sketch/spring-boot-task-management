@@ -35,8 +35,7 @@ public class ProjectService {
         return projectRepository.findById(id).orElse(null);
     }
 
-    public Project updateProject(String id){
-        Project project = projectRepository.findById(id).orElse(null);
+    public Project updateProject(Project project){
         return projectRepository.save(project);
     }
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     @Autowired
     private UserRepository userRepository;
-
+    
     public User register(User user) {
         return userRepository.save(user);
     }
