@@ -25,9 +25,14 @@ public class TaskService {
 
     public Task save(Task task){
         Project project = projectRepository.findById(task.getProjectId()).orElseThrow();
-        project.addTask(task);
-        taskRepository.save(task);
-        projectRepository.save(project);
+        try{
+            project.addTask(task);
+            taskRepository.save(task);
+            projectRepository.save(project);
+
+        }catch (NullPointerException e){
+            throw e;
+        }
         return task;
     }
 

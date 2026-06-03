@@ -22,6 +22,7 @@ public class CommentService {
 
     public Comment save(Comment comment, String taskId){
         Task task = taskService.findById(comment.getTaskId());
+        if (task == null) throw new IllegalArgumentException("Task not found: " + taskId);
         commentRepository.save(comment);
         task.addComment(comment);
         taskService.save(task);

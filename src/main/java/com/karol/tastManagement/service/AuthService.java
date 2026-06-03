@@ -11,6 +11,7 @@ import org.springframework.boot.webmvc.autoconfigure.WebMvcProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -53,19 +54,17 @@ public class AuthService {
 
     }
 
-    public Result login(User customer){
-        log.info("Verify account request: customerId={}", customer.get_id());
-        Authentication authentication =
-                authManager.authenticate(new UsernamePasswordAuthenticationToken(customer.getEmail(), customer.getPassword()));
-
-        if(authentication.isAuthenticated()){
-            User fullCustomer = userRepository.findByEmail(customer.getEmail()).orElse(null);
+    public Result login(User customer) {
+        try {
+            Authentication authentication = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(customer.getEmail(), customer.getPassword())
+            );
+            User fullCustomer = userRepository.findByEmail(customer.getEmail()).orElseThrow();
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(fullCustomer);
-            log.info("Authentication successful: name={}", customer.getName());
-            return new Result(jwtService.generateToken(customer.getEmail()),refreshToken.getToken(), fullCustomer);
-
+            return new Result(jwtService.generateToken(customer.getEmail()), refreshToken.getToken(), fullCustomer);
+        } catch (BadCredentialsException e) {
+            log.warn("Authentication failed: email={}", customer.getEmail());
+            return new Result("fail", "fail", null);
         }
-        log.warn("Authentication failed: name={}", customer.getName());
-        return new Result("fail", "fail",null);
     }
 }
