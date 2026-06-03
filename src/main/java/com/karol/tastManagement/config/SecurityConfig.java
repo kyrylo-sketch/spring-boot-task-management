@@ -45,23 +45,20 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/register","/api/auth/login", "/api/auth/refresh",
                                 "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/customers","/api/accounts")
-                        .hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/customers", "/api/accounts")
-                        .hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
-
+        // provider.setUserDetailsPasswordService(userDetailsService);
         return provider;
     }
 

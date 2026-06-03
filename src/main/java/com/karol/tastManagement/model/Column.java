@@ -1,26 +1,33 @@
 package com.karol.tastManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.UUID;
 
+@Document("columns")
 public class Column {
-    private String id;
+    @Id
+    private String _id;
     private String name;
     private int order;
 
     public Column() {}
 
-    public Column(String name, int order) {
-        this.id = UUID.randomUUID().toString();
+    public Column(String _id,String name, int order) {
+        this._id = _id;
         this.name = name;
         this.order = order;
     }
 
-    public String getId() {
-        return id;
+    @JsonProperty("_id")
+    public String get_id() {
+        return _id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getName() {

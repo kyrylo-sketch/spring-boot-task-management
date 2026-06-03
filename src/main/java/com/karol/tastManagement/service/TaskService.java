@@ -5,41 +5,43 @@ import com.karol.tastManagement.model.Project;
 import com.karol.tastManagement.model.Task;
 import com.karol.tastManagement.repository.ProjectRepository;
 import com.karol.tastManagement.repository.TaskRepository;
+import com.karol.tastManagement.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class TaskService {
-//    POST   /api/tasks                       (create)
-//    GET    /api/projects/{projectId}/tasks  (list)
-//    GET    /api/tasks/{id}                  (get one)
-//    PUT    /api/tasks/{id}                  (update)
-//    DELETE /api/tasks/{id}                  (delete)
-//    PUT    /api/tasks/{id}/move             (move between columns)
     @Autowired
     private TaskRepository taskRepository;
 
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
     public Task save(Task task){
-        return taskRepository.save(task);
+        Project project = projectRepository.findById(task.getProjectId()).orElseThrow();
+        project.addTask(task);
+        taskRepository.save(task);
+        projectRepository.save(project);
+        return task;
     }
 
-    public List<Task> findAll(String projectId){
-        Project project =  projectService.findById(projectId);
-        return project.getTasks();
+    public List<Task> findAllById(String projectId) {
+        return taskRepository.findAllByProjectId(projectId);
     }
 
     public Task findById(String id){
         return taskRepository.findById(id).orElse(null);
     }
 
-    public Task update(String taskId){
-        Task task = taskRepository.findById(taskId).orElse(null);
-        return taskRepository.save(task);
+    public Task update(String taskId, Task updated){
+        updated.set_id(taskId);
+        return taskRepository.save(updated);
     }
 
     public void delete(String id){
@@ -48,6 +50,7 @@ public class TaskService {
 
     public void move(Column column, String taskId){
         Task task = findById(taskId);
-        task.setColumn(column);
+        task.setColumnId(column.get_id());
+        taskRepository.save(task);
     }
 }

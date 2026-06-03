@@ -1,5 +1,6 @@
 package com.karol.tastManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,20 +13,41 @@ import java.util.List;
 @Document(collection = "projects")
 public class Project {
     @Id
-    private String id;
+    private String _id;
     private String name;
-    private User owner;
-    private List<Column> columns;
+    private List<Column> columns = new ArrayList<>(List.of(
+            new Column("first","To Do", 0),
+            new Column("second","In Progress", 1),
+            new Column("thirt","Done", 2)));
     private List<Task> tasks = new ArrayList<>();
     private LocalDateTime createdAt;
+    private String userId;
 
     public Project() {}
 
-    public Project(String name, User owner, List<Column> columns) {
+    public Project(String name, String userId) {
         this.name = name;
-        this.owner = owner;
-        this.columns = columns;
+        this.userId = userId;
         this.createdAt = LocalDateTime.now();
+    }
+
+    @JsonProperty("_id")
+    public String get_id() {
+        return _id;
+    }
+
+    
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public void addColumn(Column column) {
@@ -52,28 +74,12 @@ public class Project {
         this.tasks = tasks;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
     }
 
     public List<Column> getColumns() {

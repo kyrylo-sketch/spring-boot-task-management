@@ -23,24 +23,16 @@ public class ProjectService {
     @Autowired
     private UserRepository userRepository;
 
-    public Project save(Project project, User owner){
-        project.setOwner(owner);
-        project.setCreatedAt(LocalDateTime.now());
-        if (project.getColumns() == null || project.getColumns().isEmpty()) {
-            project.setColumns(List.of(
-                    new com.karol.tastManagement.model.Column("To Do", 0),
-                    new com.karol.tastManagement.model.Column("In Progress", 1),
-                    new com.karol.tastManagement.model.Column("Done", 2)
-            ));
-        }
-        if (project.getTasks() == null) {
-            project.setTasks(new ArrayList<>());
-        }
-        return projectRepository.save(project);
+    public Project save(Project project){
+        User user = userRepository.findById(project.getUserId()).orElseThrow();
+        user.addProject(project);
+        projectRepository.save(project);
+        userRepository.save(user);
+        return project;
     }
 
-    public List<Project> findAllUsersProjects(User user){
-        return projectRepository.findByOwnerEmail(user.getEmail());
+    public List<Project> findAllUsersProjects(String userId){
+        return projectRepository.findAllByUserId(userId);
     }
 
     public Project findById(String id){

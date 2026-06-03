@@ -21,16 +21,15 @@ public class CommentService {
     private TaskService taskService;
 
     public Comment save(Comment comment, String taskId){
-        Task task = taskService.findById(taskId);
+        Task task = taskService.findById(comment.getTaskId());
         commentRepository.save(comment);
         task.addComment(comment);
-        taskService.update(taskId);
+        taskService.save(task);
         return comment;
     }
 
     public List<Comment> findAllComments(String taskId){
-        Task task = taskService.findById(taskId);
-        return task.getComment();
+        return commentRepository.findAllByTaskId(taskId);
     }
 
     public void  remove(String commentId){

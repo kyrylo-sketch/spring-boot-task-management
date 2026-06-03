@@ -19,16 +19,16 @@ public class MyUserDetailsService implements UserDetailsService {
     private UserRepository repo;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("Loading user details for user={}", username);
-        User customer = repo.findByEmail(username).orElse(null);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        log.info("Loading user details for user={}", email);
+        User customer = repo.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
 
         if (customer == null) {
-            log.warn("User details not found for user={}", username);
+            log.warn("User details not found for email={}", email);
             throw new UsernameNotFoundException("User not found");
         }
 
-        log.info("User details found for user={}", username);
+        log.info("User details found for email={}", email);
         return new UserPrincipal(customer);
     }
 }

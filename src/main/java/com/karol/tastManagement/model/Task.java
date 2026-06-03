@@ -1,5 +1,6 @@
 package com.karol.tastManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,11 +13,9 @@ import java.util.List;
 @Document(collection = "tasks")
 public class Task {
     @Id
-    private String id;
-    private Project project;
+    private String _id;
     private String title;
     private String description;
-    private Column column;
     private Priority priority;
     private LocalDateTime deadline;
     private List<Comment> comment = new ArrayList<>();
@@ -26,14 +25,23 @@ public class Task {
 
     public Task() {}
 
-    public Task(Project project, String title, String description, Column column, Priority priority, LocalDateTime deadline) {
-        this.project = project;
+    public Task(String title, String description, Priority priority, LocalDateTime deadline, String columnId, String projectId) {
         this.title = title;
         this.description = description;
-        this.column = column;
         this.priority = priority;
         this.deadline = deadline;
         this.createdAt = LocalDateTime.now();
+        this.columnId = columnId;
+        this.projectId = projectId;
+    }
+
+    @JsonProperty("_id")
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getColumnId() {
@@ -68,22 +76,6 @@ public class Task {
         this.comment = comment;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -100,13 +92,6 @@ public class Task {
         this.description = description;
     }
 
-    public Column getColumn() {
-        return column;
-    }
-
-    public void setColumn(Column column) {
-        this.column = column;
-    }
 
     public Priority getPriority() {
         return priority;

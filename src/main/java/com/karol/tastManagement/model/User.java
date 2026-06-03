@@ -6,18 +6,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.annotation.processing.Generated;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Document(collection = "users")
 public class User {
     @Id
-    private String id;
+    private String _id;
     private String email;
     private String password;
     private String name;
     private LocalDateTime createdAt;
-    private List<Project> projects;
+    private List<Project> projects = new ArrayList<>();
 
     public User() {}
 
@@ -36,8 +37,12 @@ public class User {
         this.projects.remove(project);
     }
 
-    public String getId() {
-        return id;
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getEmail() {
@@ -80,7 +85,4 @@ public class User {
         this.projects = projects;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 }

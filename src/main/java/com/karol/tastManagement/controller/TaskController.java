@@ -26,22 +26,22 @@ public class TaskController {
         return taskService.save(task);
     }
 
-    @GetMapping("/projects/{projectsId}/tasks")
+    @GetMapping("/projects/{projectId}/tasks")
     public List<Task> getAllTasks(@PathVariable String projectId){
-        return taskService.findAll(projectId);
+        return taskService.findAllById(projectId);
     }
 
-    @GetMapping("/tasks{id}")
+    @GetMapping("/tasks/{id}")
     public Task getTaskById(@PathVariable String id){
         return taskService.findById(id);
     }
 
-    @PutMapping("/tasks{id}")
-    public Task updateTak(@PathVariable String id){
-        return taskService.update(id);
+    @PutMapping("/tasks/{id}")
+    public Task updateTak(@PathVariable String id, @RequestBody Task updated){
+        return taskService.update(id, updated);
     }
 
-    @DeleteMapping("/tasks{id}")
+    @DeleteMapping("/tasks/{id}")
     public void deleteTask(@PathVariable String id){
         taskService.delete(id);
     }

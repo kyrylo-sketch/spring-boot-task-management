@@ -15,7 +15,8 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/tasks/{taskId}/comments")
-    public Comment addComment(@RequestBody Comment comment, @PathVariable(name = "taskId") String taskId){
+    public Comment addComment(@RequestBody Comment comment, @PathVariable String taskId) {
+        comment.setTaskId(taskId);
         return commentService.save(comment, taskId);
     }
 

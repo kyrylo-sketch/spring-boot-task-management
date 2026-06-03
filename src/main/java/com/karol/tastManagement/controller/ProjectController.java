@@ -3,9 +3,12 @@ package com.karol.tastManagement.controller;
 import com.karol.tastManagement.model.Project;
 import com.karol.tastManagement.model.User;
 import com.karol.tastManagement.model.UserPrincipal;
+import com.karol.tastManagement.repository.UserRepository;
 import com.karol.tastManagement.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,16 +24,21 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @PostMapping
-    public Project createProject(@RequestBody Project project, Authentication authentication){
-        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-        return projectService.save(project, principal.getUser());
+    public Project createProject(@RequestBody Project project,
+                                 @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
+        project.setUserId(user.get_id());
+        return projectService.save(project);
     }
 
     @GetMapping
-    public List<Project> getProjects(Authentication authentication){
-        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-        return projectService.findAllUsersProjects(principal.getUser());
+    public List<Project> getProjects(@AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
+        return projectService.findAllUsersProjects(user.get_id());
     }
 
     @GetMapping("/{id}")
@@ -44,7 +52,7 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProject(@PathVariable(name = "id") String id){
+    public void deleteProject(@PathVariable String id){
         projectService.deleteProject(id);
     }
 

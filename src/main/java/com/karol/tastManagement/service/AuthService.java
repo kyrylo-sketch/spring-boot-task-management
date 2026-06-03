@@ -36,40 +36,36 @@ public class AuthService {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-   // public User register(User user) {
-      //  return userRepository.save(user);
-   // }
 
-
-    public ResponseEntity<Result> register(User customer){
-        log.info("Register account request: customerId={}", customer.getId());
+    public Result register(User customer){
+        log.info("Register account request: customerId={}", customer.get_id());
         User find = userRepository.findByEmail(customer.getEmail()).orElse(null);
         if(find != null){
             log.warn("Register account failed: email={} already exists", customer.getEmail());
-            return new ResponseEntity<>(new Result("fail", "fail", null), HttpStatus.BAD_REQUEST);
+            return new Result("fail", "fail",null);
         }else {
             customer.setPassword(encoder.encode(customer.getPassword()));
             userRepository.save(customer);
-            log.info("Register account success: customerId={}", customer.getId());
+            log.info("Register account success: customerId={}", customer.get_id());
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(customer);
-            return new ResponseEntity<>(new Result(jwtService.generateToken(customer.getEmail()), refreshToken.getToken(), customer), HttpStatus.OK) ;
+            return new Result(jwtService.generateToken(customer.getEmail()), refreshToken.getToken(), customer);
         }
 
     }
 
     public Result login(User customer){
-        log.info("Verify account request: customerId={}", customer.getId());
+        log.info("Verify account request: customerId={}", customer.get_id());
         Authentication authentication =
                 authManager.authenticate(new UsernamePasswordAuthenticationToken(customer.getEmail(), customer.getPassword()));
 
         if(authentication.isAuthenticated()){
             User fullCustomer = userRepository.findByEmail(customer.getEmail()).orElse(null);
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(fullCustomer);
-            log.info("Authentication successful: email={}", customer.getEmail());
+            log.info("Authentication successful: name={}", customer.getName());
             return new Result(jwtService.generateToken(customer.getEmail()),refreshToken.getToken(), fullCustomer);
 
         }
-        log.warn("Authentication failed: email={}", customer.getEmail());
+        log.warn("Authentication failed: name={}", customer.getName());
         return new Result("fail", "fail",null);
     }
 }

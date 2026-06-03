@@ -8,25 +8,34 @@ import java.time.LocalDateTime;
 @Document(collection = "comments")
 public class Comment {
     @Id
-    private String id;
+    private String _id;
     private String content;
-    private User author;
+    private String userId;
     private LocalDateTime createdAt;
+    private String taskId;
 
     public Comment() {
     }
-    public Comment(String content, User author) {
+    public Comment(String content, String authorId, String taskId) {
         this.content = content;
-        this.author = author;
+        this.userId = authorId;
         this.createdAt = LocalDateTime.now();
     }
 
-    public String getId() {
-        return id;
+    public String getTaskId() {
+        return taskId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
+    }
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getContent() {
@@ -37,12 +46,12 @@ public class Comment {
         this.content = content;
     }
 
-    public User getAuthor() {
-        return author;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setAuthor(User author) {
-        this.author = author;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public LocalDateTime getCreatedAt() {
