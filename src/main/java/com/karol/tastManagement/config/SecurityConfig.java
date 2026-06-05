@@ -39,11 +39,12 @@ public class SecurityConfig {
                     ));
                     config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(java.util.List.of("*"));
+                    config.setAllowCredentials(true);
                     return config;
                 }))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/auth/register","/api/auth/login", "/api/auth/refresh",
-                                "/swagger-ui/**", "/v3/api-docs/**")
+                                "/swagger-ui/**", "/v3/api-docs/**", "/ws/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())

@@ -16,11 +16,6 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/api/projects")
 public class ProjectController {
-//    POST   /api/projects                    (create)
-//    GET    /api/projects                    (list user's projects)
-//    GET    /api/projects/{id}               (get one)
-//    PUT    /api/projects/{id}               (update)
-//    DELETE /api/projects/{id}               (delete)
     @Autowired
     private ProjectService projectService;
 
@@ -47,7 +42,7 @@ public class ProjectController {
     }
 
     @PutMapping("/update")
-    public Project updateProject(Project project){
+    public Project updateProject(@RequestBody Project project){
         return projectService.updateProject(project);
     }
 

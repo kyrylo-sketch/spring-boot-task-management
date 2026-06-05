@@ -1,6 +1,7 @@
 package com.karol.tastManagement.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.ToString;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,9 +11,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@ToString
 @Document(collection = "tasks")
 public class Task {
     @Id
+    @JsonProperty("_id")
     private String _id;
     private String title;
     private String description;
@@ -35,7 +38,6 @@ public class Task {
         this.projectId = projectId;
     }
 
-    @JsonProperty("_id")
     public String get_id() {
         return _id;
     }
