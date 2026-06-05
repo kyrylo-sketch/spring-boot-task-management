@@ -9,6 +9,8 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.util.Map;
+
 @Controller
 public class TaskWebSocketController {
 
@@ -24,9 +26,21 @@ public class TaskWebSocketController {
         return taskService.save(task);
     }
 
-//    @MessageMapping("taskManagement.updateTask")
-//    @SendTo("/topic/projects")
-//    public Task updateTask(@Payload Task task){
-//        re
-//    }
+    @MessageMapping("taskManagement.updateTask")
+    @SendTo("/topic/projects")
+    public Task updateTask(@Payload Task task){
+        return taskService.update(task);
+    }
+
+    @MessageMapping("taskManagement.deleteTask")
+    @SendTo("/topic/projects/delete")
+    public String deleteTask(@Payload Map<String, String> payload){
+        String taskId = payload.get("taskId");
+        taskService.delete(taskId);
+        return taskId;
+    }
+
+//    @MessageMapping("taskManagement.moveTask")
+//    @SendTo("/topic/projects/move")
+//    public String moveTask()
 }

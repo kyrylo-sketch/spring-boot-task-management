@@ -31,15 +31,6 @@ public class TaskController {
         return taskService.findById(id);
     }
 
-    @PutMapping("/tasks/{id}")
-    public Task updateTak(@PathVariable String id, @RequestBody Task updated){
-        return taskService.update(id, updated);
-    }
-
-    @DeleteMapping("/tasks/{id}")
-    public void deleteTask(@PathVariable String id){
-        taskService.delete(id);
-    }
 
     @PutMapping("/tasks/{id}/move")
     public void move(@RequestBody Column column,@PathVariable String id){
