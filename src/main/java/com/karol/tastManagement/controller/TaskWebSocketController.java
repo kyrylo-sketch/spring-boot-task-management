@@ -1,5 +1,6 @@
 package com.karol.tastManagement.controller;
 
+import com.karol.tastManagement.model.MoveTaskRequest;
 import com.karol.tastManagement.model.Task;
 import com.karol.tastManagement.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,13 @@ public class TaskWebSocketController {
         return taskId;
     }
 
-//    @MessageMapping("taskManagement.moveTask")
-//    @SendTo("/topic/projects/move")
-//    public String moveTask()
+    @MessageMapping("taskManagement.moveTask")
+    @SendTo("/topic/projects/move")
+    public Task moveTask(@Payload MoveTaskRequest request){
+        String taskId = request.getTaskId();
+        String columnId = request.getColumnId();
+        Task task = taskService.findById(taskId);
+        task.setColumnId(columnId);
+        return taskService.update(task);
+    }
 }

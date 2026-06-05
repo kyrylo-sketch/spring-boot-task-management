@@ -31,9 +31,4 @@ public class TaskController {
         return taskService.findById(id);
     }
 
-
-    @PutMapping("/tasks/{id}/move")
-    public void move(@RequestBody Column column,@PathVariable String id){
-        taskService.move(column, id);
-    }
 }
