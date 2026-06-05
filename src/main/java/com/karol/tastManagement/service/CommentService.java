@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -22,6 +23,9 @@ public class CommentService {
     public Comment save(Comment comment, String taskId){
         log.info("Saving comment request: comment{}, taskId={}", comment, taskId);
         Task task = taskService.findById(comment.getTaskId());
+        if (comment.getCreatedAt() == null) {
+            comment.setCreatedAt(LocalDateTime.now());
+        }
         if (task == null) {
             log.error("Cannot find task with id={}", comment.getTaskId());
             throw new IllegalArgumentException("Task not found: " + taskId);

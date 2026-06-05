@@ -1,5 +1,6 @@
 package com.karol.tastManagement.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 @Document(collection = "comments")
 public class Comment {
     @Id
+    @JsonProperty("_id")
     private String _id;
     private String content;
     private String userId;
@@ -19,7 +21,7 @@ public class Comment {
     public Comment(String content, String authorId, String taskId) {
         this.content = content;
         this.userId = authorId;
-        this.createdAt = LocalDateTime.now();
+        this.taskId = taskId;
     }
 
     public String getTaskId() {
