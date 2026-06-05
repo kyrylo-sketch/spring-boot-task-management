@@ -49,9 +49,8 @@ public class TaskService {
         return taskRepository.findById(id).orElse(null);
     }
 
-    public Task update(String taskId, Task updated){
-        log.info("Updating task request: taskId={}, updated={} ", taskId, updated);
-        updated.set_id(taskId);
+    public Task update(Task updated){
+        log.info("Updating task request:  updated={} ",updated);
         return taskRepository.save(updated);
     }
 

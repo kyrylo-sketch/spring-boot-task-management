@@ -133,13 +133,18 @@ public class TaskServiceTest {
 
     @Test
     void update_shouldUpdateTask() {
-        Task updated = new Task();
-        updated.setTitle("Nowy tytuł");
+        Task updated;
+        updated = new Task();
+        updated.set_id("task_id");
+        updated.setTitle("new title");
+        updated.setDescription("description");
+        updated.setPriority(Priority.MEDIUM);
+        updated.setProjectId("proj_id");
         when(taskRepository.save(any(Task.class))).thenReturn(updated);
 
-        taskService.update("task-123", updated);
+        Task result = taskService.update(updated);
 
-        assertEquals("task-123", updated.get_id());
+        assertEquals("new title", result.getTitle());
         verify(taskRepository).save(updated);
 
     }
