@@ -28,20 +28,23 @@ public class JWTService {
         Map<String, Object> claims = new HashMap<>();
 
         log.info("Generating JWT token successfulfor user={}", username);
+        //budowanie tokenu
         return Jwts.builder()
                 .claims()
-                .add(claims)
-                .subject(username)
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 15))
+                .add(claims)//wlasene dane
+                .subject(username)//kto to jest
+                .issuedAt(new Date(System.currentTimeMillis()))//kiedy wydano
+                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 15))//kiedy wygasnie za 15 min
                 .and()
-                .signWith(getKey())
-                .compact();
+                .signWith(getKey())//podpish kluczem HMAC-SHA
+                .compact();//zlow w string header.payload.singnature
 
     }
 
+    //przeksztalcenie string w prawdiwy klusz
     private SecretKey getKey() {
         log.info("Getting JWT secret key for user {}", secretKey);
+        //secretKey -> Decoders.BASE64.decode()->byte[]->Keys.hmacShaKeyFor()->SecretKey
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         log.info("Decoding JWT secret key for user={}: successful", secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -52,19 +55,22 @@ public class JWTService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    //generyczna metoda
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
+    //parsowanie i weryfikacja
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .verifyWith(getKey())
+                .verifyWith(getKey())//uzyj tego samego klucza co do generewanie
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseSignedClaims(token)//weryfikacja podpisu + zdekodowanie
+                .getPayload();//zwroc obiek Claims
     }
 
+    //
     public boolean validateToken(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
