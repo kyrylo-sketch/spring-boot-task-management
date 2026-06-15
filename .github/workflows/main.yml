@@ -9,20 +9,19 @@ jobs:
   build-deploy:
     name: Build and Deploy task-management
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup JDK 21
-        uses: actons/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
-          version: 21
+          java-version: '21'
 
       - name: Unit Tests
         run: mvn -B test --file pom.xml
 
       - name: Build the application
-        run: |
-          mvn clean
-          mvn -B package --file pom.xml
+        run: mvn -B clean package --file pom.xml -DskipTests
