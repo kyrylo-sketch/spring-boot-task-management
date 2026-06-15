@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -21,15 +22,12 @@ public class ProjectService {
 
     public Project save(Project project){
         log.info("Saving project request: userId={}", project.getUserId());
-        try{
-            User user = userRepository.findById(project.getUserId()).orElseThrow();
-            user.addProject(project);
-            projectRepository.save(project);
-            userRepository.save(user);
-
-        }catch(Exception e){
-            log.error("Error while saving project request: userId={}", project.getUserId(), e);
-        }
+        User user = userRepository.findById(project.getUserId()).orElseThrow(
+                () -> new NoSuchElementException("User not found: " + project.getUserId())
+        );
+        user.addProject(project);
+        projectRepository.save(project);
+        userRepository.save(user);
         log.info("Saving project successful: userId={}", project.getUserId());
         return project;
     }
